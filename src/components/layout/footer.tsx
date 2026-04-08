@@ -6,7 +6,7 @@ const Footer = () => {
     <SectionContainer
       as="footer"
       className="text-muted-foreground border-t md:py-6"
-      innerClassName="text-center text-xs"
+      innerClassName="text-center text-xs leading-relaxed"
     >
       <span>Made with ❤️ by </span>
       <Link

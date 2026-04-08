@@ -7,7 +7,7 @@ const Header = () => {
     <SectionContainer
       as="header"
       className="text-foreground border-b py-3 md:py-3"
-      innerClassName="flex justify-between"
+      innerClassName="flex items-center justify-between gap-2"
     >
       <div className="flex items-center gap-2 font-black">
         <svg
@@ -22,7 +22,7 @@ const Header = () => {
           <path d="M22.0596 22.0605L0 22.0596L11.0303 11.1201V11.0303L22.0596 0.0898438V0H44.1299L22.0596 22.0605Z" />
         </svg>
       </div>
-      <div className="flex gap-2">
+      <div className="flex items-center gap-1 sm:gap-2">
         <Link
           href={'https://github.com/siam-parvez/skill-logos'}
           target="_blank"

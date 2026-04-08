@@ -21,7 +21,12 @@ const ThemeSwitch = () => {
   return (
     <Tooltip>
       <TooltipTrigger onClick={() => setTheme(isDark ? 'light' : 'dark')} asChild>
-        <Button type="button" variant="outline" size="icon" className="gap-2">
+        <Button
+          type="button"
+          variant={'ghost'}
+          size={'icon'}
+          className="text-foreground hover:text-primary transition-all duration-300"
+        >
           {isDark ? <Sun className="size-5" /> : <Moon className="size-5" />}
         </Button>
       </TooltipTrigger>

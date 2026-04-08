@@ -3,6 +3,9 @@ import { Geist, Geist_Mono, Inter } from 'next/font/google';
 import './globals.css';
 import { cn } from '@/lib/utils';
 import { Footer } from '@/components/layout/footer';
+import { ThemeProvider } from 'next-themes';
+import { TooltipProvider } from '@/components/ui/tooltip';
+import Header from '@/components/layout/header';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
 
@@ -30,7 +33,7 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang='en'
+      lang="en"
       className={cn(
         'h-full',
         'antialiased',
@@ -39,10 +42,21 @@ export default function RootLayout({
         'font-sans',
         inter.variable,
       )}
+      suppressHydrationWarning
     >
-      <body className='min-h-full flex flex-col'>
-        {children}
-        <Footer />
+      <body className="flex min-h-full flex-col">
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          enableSystem={false}
+          disableTransitionOnChange
+        >
+          <TooltipProvider>
+            <Header />
+            {children}
+            <Footer />
+          </TooltipProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

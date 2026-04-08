@@ -9,9 +9,8 @@ interface SectionContainerOwnProps<T extends ElementType> {
   innerClassName?: string;
 }
 
-type SectionContainerProps<T extends ElementType> =
-  SectionContainerOwnProps<T> &
-    Omit<ComponentPropsWithoutRef<T>, keyof SectionContainerOwnProps<T>>;
+type SectionContainerProps<T extends ElementType> = SectionContainerOwnProps<T> &
+  Omit<ComponentPropsWithoutRef<T>, keyof SectionContainerOwnProps<T>>;
 
 export default function SectionContainer<T extends ElementType = 'section'>({
   children,
@@ -25,12 +24,7 @@ export default function SectionContainer<T extends ElementType = 'section'>({
   const content = fullBleed ? (
     children
   ) : (
-    <div
-      className={cn(
-        'mx-auto w-full max-w-6xl 2xl:max-w-screen-2xl',
-        innerClassName,
-      )}
-    >
+    <div className={cn('mx-auto w-full max-w-6xl 2xl:max-w-screen-2xl', innerClassName)}>
       {children}
     </div>
   );

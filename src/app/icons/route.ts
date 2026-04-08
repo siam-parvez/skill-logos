@@ -5,11 +5,7 @@ export const dynamic = 'force-dynamic';
 
 export function GET(request: Request) {
   const { searchParams } = new URL(request.url);
-  const iconParam = (
-    searchParams.get('i') ||
-    searchParams.get('icons') ||
-    'all'
-  )
+  const iconParam = (searchParams.get('i') || searchParams.get('icons') || 'all')
     .trim()
     .toLowerCase();
 
@@ -41,9 +37,7 @@ export function GET(request: Request) {
           .filter(Boolean);
 
   const iconShortNames =
-    requestedIconNames.length > 0
-      ? requestedIconNames
-      : skillIcons.iconNameList;
+    requestedIconNames.length > 0 ? requestedIconNames : skillIcons.iconNameList;
 
   const iconNames = theme
     ? skillIcons.parseShortNames(iconShortNames, theme)

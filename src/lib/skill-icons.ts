@@ -52,9 +52,7 @@ for (const iconFile of fs.readdirSync(iconsDir)) {
   icons[name] = String(fs.readFileSync(path.join(iconsDir, iconFile)));
 }
 
-const iconNameList = [
-  ...new Set(Object.keys(icons).map((name) => name.split('-')[0])),
-];
+const iconNameList = [...new Set(Object.keys(icons).map((name) => name.split('-')[0]))];
 const iconNameSet = new Set(iconNameList);
 const themedIconSet = new Set(
   Object.keys(icons)
@@ -106,9 +104,7 @@ function generateSvg(iconNames: string[], perLine: number) {
     ${iconSvgList
       .map(
         (svg, index) => `
-        <g transform="translate(${(index % perLine) * 300}, ${
-          Math.floor(index / perLine) * 300
-        })">
+        <g transform="translate(${(index % perLine) * 300}, ${Math.floor(index / perLine) * 300})">
           ${svg}
         </g>
         `,

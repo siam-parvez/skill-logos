@@ -1,7 +1,7 @@
 'use client';
 
-import { useMemo, useState } from 'react';
-import { Check, Copy, Search, Sparkles, Trash2 } from 'lucide-react';
+import { useMemo, useState, useSyncExternalStore } from 'react';
+import { Check, Copy, Search, RotateCcw } from 'lucide-react';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -12,6 +12,7 @@ type SnippetType = 'markdown' | 'linked' | 'html';
 const INITIAL_VISIBLE = 120;
 const VISIBLE_STEP = 90;
 const MAX_SELECTION = 60;
+const PREVIEW_SLOT_SIZE = 48;
 
 interface IconCreatorProps {
   iconNames: string[];
@@ -24,7 +25,11 @@ export default function IconCreator({ iconNames }: IconCreatorProps) {
   const [perLine, setPerLine] = useState(8);
   const [visible, setVisible] = useState(INITIAL_VISIBLE);
   const [copied, setCopied] = useState<SnippetType | null>(null);
-  const origin = typeof window !== 'undefined' ? window.location.origin : '';
+  const origin = useSyncExternalStore(
+    () => () => {},
+    () => window.location.origin,
+    () => '',
+  );
 
   const sortedNames = useMemo(() => [...iconNames].sort(), [iconNames]);
 
@@ -39,6 +44,11 @@ export default function IconCreator({ iconNames }: IconCreatorProps) {
 
   const selectedIcons =
     selected.length > 0 ? selected : filteredNames.slice(0, Math.min(10, perLine * 2));
+  const previewSlots = useMemo(() => {
+    const slotCount = Math.max(perLine * 2, selected.length);
+
+    return Array.from({ length: slotCount }, (_, index) => selected[index] ?? null);
+  }, [perLine, selected]);
 
   const iconParam = encodeURIComponent(selectedIcons.join(','));
   const previewPath = `/icons?i=${iconParam}&theme=${theme}&perline=${perLine}`;
@@ -82,8 +92,8 @@ export default function IconCreator({ iconNames }: IconCreatorProps) {
             disabled={selected.length === 0}
             className="w-full sm:w-auto"
           >
-            <Trash2 className="size-4" />
-            Clear
+            <RotateCcw className="size-4" />
+            Clear Selection
           </Button>
         </div>
 
@@ -188,24 +198,48 @@ export default function IconCreator({ iconNames }: IconCreatorProps) {
       <section className="min-w-0 space-y-4">
         <div className="bg-card/90 border-border rounded-3xl border p-4 shadow-sm md:p-6">
           <div className="mb-3 flex items-center gap-2">
-            <Sparkles className="text-primary size-4" />
             <h3 className="text-foreground text-lg font-black">Live Preview</h3>
           </div>
 
-          <div className="bg-background border-border overflow-hidden rounded-2xl border p-3">
-            <Image
-              src={previewPath}
-              alt="Generated skill logos"
-              width={1200}
-              height={260}
-              unoptimized
-              className="mx-auto h-auto w-full max-w-full"
-              loading="eager"
-            />
+          <div className="bg-background border-border overflow-x-auto rounded-2xl border p-3">
+            <div
+              className="mx-auto grid gap-2"
+              style={{ gridTemplateColumns: `repeat(${perLine}, ${PREVIEW_SLOT_SIZE}px)` }}
+            >
+              {previewSlots.map((iconName, index) => {
+                if (iconName) {
+                  return (
+                    <div
+                      key={`${iconName}-${index}`}
+                      className="border-border bg-muted/20 h-12 w-12 overflow-hidden rounded-xl border"
+                    >
+                      <Image
+                        src={`/icons?i=${encodeURIComponent(iconName)}&theme=${theme}&perline=1`}
+                        alt={iconName}
+                        width={48}
+                        height={48}
+                        loading="eager"
+                        unoptimized
+                        className="block h-full w-full"
+                      />
+                    </div>
+                  );
+                }
+
+                return (
+                  <div
+                    key={`placeholder-${index}`}
+                    className="border-border bg-muted/20 h-12 w-12 rounded-xl border border-dashed"
+                    aria-hidden="true"
+                  />
+                );
+              })}
+            </div>
           </div>
 
           <p className="text-muted-foreground mt-3 text-xs leading-relaxed">
-            Tip: no icons selected means we preview a small auto-pick from your current search.
+            Tip: selected icons replace placeholder slots one for one. Empty cells stay visible at
+            the same size as the generated preview.
           </p>
         </div>
 
@@ -213,9 +247,9 @@ export default function IconCreator({ iconNames }: IconCreatorProps) {
           <h3 className="text-foreground mb-3 text-lg font-black">Copy Embed Code</h3>
           <CodeRow
             label="Markdown"
-            code={linkedSnippet}
-            copied={copied === 'linked'}
-            onCopy={() => copySnippet('linked')}
+            code={markdownSnippet}
+            copied={copied === 'markdown'}
+            onCopy={() => copySnippet('markdown')}
           />
           <CodeRow
             label="HTML"
@@ -251,8 +285,8 @@ function CodeRow({
           {copied ? 'Copied' : 'Copy'}
         </Button>
       </div>
-      <pre className="bg-background border-border max-w-full overflow-x-auto rounded-xl border p-3 text-xs leading-relaxed">
-        <code>{code}</code>
+      <pre className="bg-background border-border max-w-full rounded-xl border p-3 text-xs leading-relaxed wrap-break-word whitespace-pre-wrap">
+        <code className="block">{code}</code>
       </pre>
     </div>
   );

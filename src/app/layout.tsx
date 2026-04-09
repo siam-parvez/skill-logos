@@ -6,6 +6,7 @@ import Footer from '@/components/layout/footer';
 import { ThemeProvider } from 'next-themes';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import Header from '@/components/layout/header';
+import { TailwindHelper } from '@/components/shared/tailwind-helper';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
 
@@ -56,6 +57,7 @@ export default function RootLayout({
             {children}
             <Footer />
           </TooltipProvider>
+          <TailwindHelper />
         </ThemeProvider>
       </body>
     </html>

@@ -1,6 +1,7 @@
 import SectionContainer from '@/components/layout/section-container';
 import IconCreator from '@/components/home/icon-creator';
 import skillIcons from '@/lib/skill-icons';
+import Link from 'next/link';
 
 export default function Home() {
   return (
@@ -17,6 +18,16 @@ export default function Home() {
           <p className="text-muted-foreground mx-auto mt-5 max-w-2xl text-sm leading-relaxed md:text-base">
             Pick from the available logo set, preview your generated SVG instantly, and copy a
             ready-to-paste snippet for your README, profile, or repository docs.
+          </p>
+          <p className="text-background/80 bg-foreground mx-auto my-4 w-fit rounded-lg border px-2 py-1 text-xs">
+            Based on the open-source project&nbsp; @
+            <Link
+              href="https://skillicons.dev/"
+              target="_blank"
+              className="underline hover:no-underline"
+            >
+              skillicons.dev
+            </Link>
           </p>
           <div className="mt-7 flex flex-wrap items-center justify-center gap-2 text-xs md:text-sm">
             <span className="bg-secondary text-secondary-foreground rounded-full px-3 py-1 font-medium">

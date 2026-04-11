@@ -46,7 +46,6 @@ export default function IconCreator({ iconNames }: IconCreatorProps) {
     selected.length > 0 ? selected : filteredNames.slice(0, Math.min(10, perLine * 2));
   const previewSlots = useMemo(() => {
     const slotCount = Math.max(perLine * 2, selected.length);
-
     return Array.from({ length: slotCount }, (_, index) => selected[index] ?? null);
   }, [perLine, selected]);
 
@@ -76,13 +75,15 @@ export default function IconCreator({ iconNames }: IconCreatorProps) {
   }
 
   return (
-    <div className="grid min-w-0 gap-4 md:gap-6 lg:grid-cols-[1.05fr_1fr]">
-      <section className="bg-card/90 border-border min-w-0 rounded-3xl border p-4 shadow-sm md:p-6">
-        <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
+    <div className="grid min-w-0 gap-4 md:gap-6 lg:grid-cols-[1.22fr_0.78fr]">
+      <section className="bg-card border-border min-w-0 rounded-2xl border p-4 shadow-sm md:p-6">
+        <div className="mb-4 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
           <div>
-            <h2 className="text-foreground text-xl font-black md:text-2xl">Visual Logo Creator</h2>
+            <h2 className="text-foreground text-2xl font-semibold tracking-tight md:text-3xl">
+              Visual Logo Creator
+            </h2>
             <p className="text-muted-foreground mt-1 text-sm">
-              Select up to {MAX_SELECTION} icons and generate your embed code.
+              Select icons, tune layout, and export your final embed code.
             </p>
           </div>
           <Button
@@ -90,15 +91,15 @@ export default function IconCreator({ iconNames }: IconCreatorProps) {
             size="sm"
             onClick={() => setSelected([])}
             disabled={selected.length === 0}
-            className="w-full sm:w-auto"
+            className="w-full md:w-auto"
           >
             <RotateCcw className="size-4" />
             Clear Selection
           </Button>
         </div>
 
-        <div className="mb-4 grid grid-cols-2 gap-3">
-          <label className="bg-background border-border focus-within:ring-ring/40 col-span-2 flex items-center gap-2 rounded-xl border px-3 py-2 focus-within:ring-2">
+        <div className="mb-4 grid grid-cols-1 gap-3 md:grid-cols-[1fr_auto_auto]">
+          <label className="bg-background border-border focus-within:ring-ring/30 flex items-center gap-2 rounded-xl border px-3 py-2.5 focus-within:ring-2">
             <Search className="text-muted-foreground size-4" />
             <input
               value={search}
@@ -111,26 +112,22 @@ export default function IconCreator({ iconNames }: IconCreatorProps) {
             />
           </label>
 
-          <div className="bg-background border-border grid w-full grid-cols-2 rounded-xl border p-1 sm:w-auto">
+          <div className="bg-background border-border grid w-full grid-cols-2 rounded-xl border p-1 md:w-44">
             {(['dark', 'light'] as const).map((item) => (
               <Button
                 key={item}
                 type="button"
                 variant={theme === item ? 'default' : 'ghost'}
                 onClick={() => setTheme(item)}
-                className={cn(
-                  'flex-1 rounded-lg px-3 py-1.5 text-xs font-semibold uppercase transition-colors sm:flex-none',
-                )}
+                className="px-3 py-1.5 text-xs font-medium uppercase"
               >
                 {item}
               </Button>
             ))}
           </div>
 
-          <label className="bg-background border-border flex items-center justify-between gap-2 rounded-xl border px-3 py-2 text-sm sm:justify-start">
-            <span className="text-muted-foreground text-xs font-medium text-nowrap uppercase">
-              Per line
-            </span>
+          <label className="bg-background border-border flex items-center gap-2 rounded-xl border px-3 py-2 md:w-56">
+            <span className="text-muted-foreground text-xs font-medium uppercase">Per line</span>
             <input
               type="range"
               min={4}
@@ -150,7 +147,7 @@ export default function IconCreator({ iconNames }: IconCreatorProps) {
           <span className="text-primary font-semibold">{selected.length} selected</span>
         </div>
 
-        <div className="grid max-h-112 grid-cols-2 gap-2 overflow-auto pr-1 sm:max-h-128 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+        <div className="grid max-h-128 grid-cols-2 gap-2 overflow-auto pr-1 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
           {visibleIcons.map((name) => {
             const isSelected = selectedSet.has(name);
             return (
@@ -159,13 +156,13 @@ export default function IconCreator({ iconNames }: IconCreatorProps) {
                 type="button"
                 onClick={() => toggleIcon(name)}
                 className={cn(
-                  'bg-background border-border hover:border-primary/60 relative flex aspect-square flex-col items-center justify-center gap-2 rounded-xl border p-2 transition-colors',
-                  isSelected && 'border-primary bg-primary/5',
+                  'bg-background border-border hover:border-ring relative flex aspect-square flex-col items-center justify-center gap-2 rounded-xl border p-2 transition-colors',
+                  isSelected && 'border-foreground bg-muted/70',
                 )}
                 title={name}
               >
                 {isSelected ? (
-                  <span className="bg-primary text-primary-foreground absolute top-1 right-1 rounded-full p-1">
+                  <span className="bg-foreground text-background absolute top-1 right-1 rounded-full p-1">
                     <Check className="size-3" />
                   </span>
                 ) : null}
@@ -195,13 +192,10 @@ export default function IconCreator({ iconNames }: IconCreatorProps) {
         ) : null}
       </section>
 
-      <section className="min-w-0 space-y-4">
-        <div className="bg-card/90 border-border rounded-3xl border p-4 shadow-sm md:p-6">
-          <div className="mb-3 flex items-center gap-2">
-            <h3 className="text-foreground text-lg font-black">Live Preview</h3>
-          </div>
-
-          <div className="bg-background border-border overflow-x-auto rounded-2xl border p-3">
+      <aside className="bg-card border-border min-w-0 rounded-2xl border p-4 shadow-sm md:p-6 lg:sticky lg:top-20 lg:self-start">
+        <div className="mb-5">
+          <h3 className="text-foreground text-base font-semibold md:text-lg">Live Preview</h3>
+          <div className="bg-background border-border mt-3 overflow-x-auto rounded-xl border p-3">
             <div
               className="mx-auto grid gap-2"
               style={{ gridTemplateColumns: `repeat(${perLine}, ${PREVIEW_SLOT_SIZE}px)` }}
@@ -236,15 +230,12 @@ export default function IconCreator({ iconNames }: IconCreatorProps) {
               })}
             </div>
           </div>
-
-          <p className="text-muted-foreground mt-3 text-xs leading-relaxed">
-            Tip: selected icons replace placeholder slots one for one. Empty cells stay visible at
-            the same size as the generated preview.
-          </p>
         </div>
 
-        <div className="bg-card/90 border-border rounded-3xl border p-4 shadow-sm md:p-6">
-          <h3 className="text-foreground mb-3 text-lg font-black">Copy Embed Code</h3>
+        <div className="border-border border-t pt-5">
+          <h3 className="text-foreground mb-3 text-base font-semibold md:text-lg">
+            Copy Embed Code
+          </h3>
           <CodeRow
             label="Markdown"
             code={markdownSnippet}
@@ -258,7 +249,7 @@ export default function IconCreator({ iconNames }: IconCreatorProps) {
             onCopy={() => copySnippet('html')}
           />
         </div>
-      </section>
+      </aside>
     </div>
   );
 }

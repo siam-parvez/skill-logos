@@ -16,9 +16,10 @@ const PREVIEW_SLOT_SIZE = 48;
 
 interface IconCreatorProps {
   iconNames: string[];
+  iconSources: Record<string, { dark: string; light: string }>;
 }
 
-export default function IconCreator({ iconNames }: IconCreatorProps) {
+export default function IconCreator({ iconNames, iconSources }: IconCreatorProps) {
   const [search, setSearch] = useState('');
   const [selected, setSelected] = useState<string[]>([]);
   const [theme, setTheme] = useState<Theme>('dark');
@@ -56,6 +57,8 @@ export default function IconCreator({ iconNames }: IconCreatorProps) {
   const markdownSnippet = `![Skill Logos](${fullPreviewUrl})`;
   const linkedSnippet = `[![Skill Logos](${fullPreviewUrl})](${origin || 'https://your-site.com'})`;
   const htmlSnippet = `<img src="${fullPreviewUrl}" alt="Skill Logos" />`;
+
+  const getIconSource = (name: string) => iconSources[name]?.[theme] ?? null;
 
   function toggleIcon(name: string) {
     setSelected((prev) => {
@@ -127,7 +130,9 @@ export default function IconCreator({ iconNames }: IconCreatorProps) {
           </div>
 
           <label className="bg-background border-border flex items-center gap-2 rounded-xl border px-3 py-2 md:w-56">
-            <span className="text-muted-foreground text-xs font-medium uppercase">Per line</span>
+            <span className="text-muted-foreground text-xs font-medium text-nowrap uppercase">
+              Per line
+            </span>
             <input
               type="range"
               min={4}
@@ -167,7 +172,10 @@ export default function IconCreator({ iconNames }: IconCreatorProps) {
                   </span>
                 ) : null}
                 <Image
-                  src={`/icons?i=${encodeURIComponent(name)}&theme=${theme}&perline=1`}
+                  src={
+                    getIconSource(name) ??
+                    `/icons?i=${encodeURIComponent(name)}&theme=${theme}&perline=1`
+                  }
                   alt={name}
                   loading="lazy"
                   width={36}
@@ -208,7 +216,10 @@ export default function IconCreator({ iconNames }: IconCreatorProps) {
                       className="border-border bg-muted/20 h-12 w-12 overflow-hidden rounded-xl border"
                     >
                       <Image
-                        src={`/icons?i=${encodeURIComponent(iconName)}&theme=${theme}&perline=1`}
+                        src={
+                          getIconSource(iconName) ??
+                          `/icons?i=${encodeURIComponent(iconName)}&theme=${theme}&perline=1`
+                        }
                         alt={iconName}
                         width={48}
                         height={48}

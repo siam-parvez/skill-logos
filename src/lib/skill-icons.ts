@@ -47,9 +47,27 @@ const shortNames: Record<string, string> = {
 };
 
 const icons: Record<string, string> = {};
+const iconSources: Record<string, { dark: string; light: string }> = {};
 for (const iconFile of fs.readdirSync(iconsDir)) {
-  const name = path.parse(iconFile).name.toLowerCase();
+  const parsedName = path.parse(iconFile).name;
+  const name = parsedName.toLowerCase();
   icons[name] = String(fs.readFileSync(path.join(iconsDir, iconFile)));
+
+  const canonicalName = parsedName.split('-')[0].toLowerCase();
+  const publicPath = `/icons/${encodeURIComponent(iconFile)}`;
+
+  if (!iconSources[canonicalName]) {
+    iconSources[canonicalName] = { dark: publicPath, light: publicPath };
+  }
+
+  if (parsedName.toLowerCase().endsWith('-dark')) {
+    iconSources[canonicalName].dark = publicPath;
+  } else if (parsedName.toLowerCase().endsWith('-light')) {
+    iconSources[canonicalName].light = publicPath;
+  } else {
+    iconSources[canonicalName].dark = publicPath;
+    iconSources[canonicalName].light = publicPath;
+  }
 }
 
 const iconNameList = [...new Set(Object.keys(icons).map((name) => name.split('-')[0]))];
@@ -119,6 +137,7 @@ const skillIcons = {
   generateSvg,
   iconNameList,
   icons,
+  iconSources,
   parseShortNames,
 };
 

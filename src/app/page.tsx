@@ -44,7 +44,7 @@ export default function Home() {
       </SectionContainer>
 
       <SectionContainer className="py-8 md:py-12">
-        <IconCreator iconNames={skillIcons.iconNameList} />
+        <IconCreator iconNames={skillIcons.iconNameList} iconSources={skillIcons.iconSources} />
       </SectionContainer>
     </>
   );

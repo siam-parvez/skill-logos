@@ -213,7 +213,7 @@ export default function IconCreator({ iconNames, iconSources }: IconCreatorProps
                   return (
                     <div
                       key={`${iconName}-${index}`}
-                      className="border-border bg-muted/20 h-12 w-12 overflow-hidden rounded-xl border"
+                      className="border-border bg-muted/20 h-12 w-12 overflow-hidden rounded-md border"
                     >
                       <Image
                         src={
@@ -234,7 +234,7 @@ export default function IconCreator({ iconNames, iconSources }: IconCreatorProps
                 return (
                   <div
                     key={`placeholder-${index}`}
-                    className="border-border bg-muted/20 h-12 w-12 rounded-xl border border-dashed"
+                    className="border-border bg-muted/20 h-12 w-12 rounded-md border border-dashed"
                     aria-hidden="true"
                   />
                 );
